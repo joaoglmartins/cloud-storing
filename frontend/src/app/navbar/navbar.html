@@ -1,0 +1,14 @@
+<div class="navbar">
+  <div class="logo">
+    <img [src]="iconUrl" alt="Cloud Storing Logo" width="40" height="40">
+    <a routerLink="/">Cloud Storing</a>
+  </div>
+  <div class="nav-links">
+    @if (isLoggedIn) {
+    <a (click)="logout()">Logout</a>
+    } @else {
+    <a routerLink="/login">Login</a>
+    <a routerLink="/signup">Sign up</a>
+    }
+  </div>
+</div>
