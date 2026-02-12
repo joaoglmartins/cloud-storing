@@ -1,0 +1,7 @@
+<div class="home">
+    <div class="input-name">
+        <input type="text" placeholder="File name" [(ngModel)]="fileName">
+        <input type="file" name="file" id="fileInput" (change)="onFileChange($event)">
+        <button (click)="addFile()">Add file</button>
+    </div>
+</div>
