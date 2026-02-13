@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { File } from '../file';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,10 @@ export class Home {
   fileName: string = '';
   file: File | null = null;
 
-  files: Array<File> = [];
+  files: Array<File> = [
+    new File('example.txt', 1024, 'http://example.com/example.txt', new Date()),
+    new File('image.png', 204800, 'http://example.com/image.png', new Date()),
+  ];
 
   getfiles() {
     fetch('', {
@@ -37,7 +41,7 @@ export class Home {
     })
       .then((response) => response.json())
       .then((data) => {
-        this.files.push(new File([this.file!], this.fileName));
+        this.files.push(new File(this.fileName, this.file!.size, this.file!.url, this.file!.lastModified));
         this.fileName = '';
       })
       .catch((error) => {
@@ -47,5 +51,23 @@ export class Home {
 
   onFileChange(event: any) {
     this.file = event.target.files[0];
+  }
+
+  onDownload(file: File) {
+    fetch(file.url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error('Error downloading file:', error);
+      });
   }
 }
